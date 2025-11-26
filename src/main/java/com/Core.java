@@ -9,8 +9,10 @@ import java.util.Stack;
 public class Core {
     //棋盘大小
     private final int[][] core;
-    private final int x;
-    private final int y;
+    private final int xLength;
+    private final int yLength;
+    //栈
+    Stack<Chess> stack;
 
     //记录下棋的类
     static class Chess {
@@ -23,15 +25,12 @@ public class Core {
         }
     }
 
-    //栈
-    Stack<Chess> stack;
-
     //构造方法
-    public Core(int x, int y) {
+    public Core(int xLength, int yLength) {
         stack = new Stack<>();
-        core = new int[x][y];
-        this.x = x;
-        this.y = y;
+        core = new int[xLength][yLength];
+        this.xLength = xLength;
+        this.yLength = yLength;
     }
 
 
@@ -40,7 +39,7 @@ public class Core {
 
         int trans = 0;
         for (int i = x - 4; i < x + 5; i++) {
-            if (i < 0 || i >= this.x) continue;
+            if (i < 0 || i >= this.xLength) continue;
             if (core[i][y] == var) {
                 trans++;
             } else {
@@ -51,7 +50,7 @@ public class Core {
 
         int longitudinal = 0;
         for (int i = y - 4; i < y + 5; i++) {
-            if (i < 0 || i >= this.y) continue;
+            if (i < 0 || i >= this.yLength) continue;
             if (core[x][i] == var) {
                 longitudinal++;
             } else {
@@ -62,7 +61,7 @@ public class Core {
 
         int leftUPToDown = 0;
         for (int i = x - 4, j = y - 4; i < x + 5 && j < y + 5; i++, j++) {
-            if (i < 0 || i >= this.x || j < 0 || j >= this.y) continue;
+            if (i < 0 || i >= this.xLength || j < 0 || j >= this.yLength) continue;
             if (core[i][j] == var) {
                 leftUPToDown++;
             } else {
@@ -73,7 +72,7 @@ public class Core {
 
         int rightUpToDown = 0;
         for (int i = x + 4, j = y - 4; i > x - 5 && j < y + 5; i--, j++) {
-            if (i < 0 || i >= this.x || j < 0 || j >= this.y) continue;
+            if (i < 0 || i >= this.xLength || j < 0 || j >= this.yLength) continue;
             if (core[i][j] == var) {
                 rightUpToDown++;
             } else {
@@ -85,12 +84,7 @@ public class Core {
     }
 
     /**
-     * 在该位置下棋  1:white 2:black
-     *
-     * @param x   横坐标
-     * @param y   纵坐标
-     * @param var 棋子种类
-     * @return 1:white 赢   2:black赢
+     * 在该位置下棋
      */
     public int chessIt(int x, int y, int var) {
         if (core[x][y] == 0) {
@@ -118,7 +112,7 @@ public class Core {
 
     //重新开始
     public void restart() {
-        for (int i = 0; i < this.x; i++) {
+        for (int i = 0; i < this.xLength; i++) {
             Arrays.fill(core[i], 0);
         }
         this.stack.clear();

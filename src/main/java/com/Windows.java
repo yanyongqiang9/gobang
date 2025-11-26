@@ -14,8 +14,8 @@ public class Windows extends JFrame implements MouseListener {
     private final int human = 1;
     private final int ai = 2;
 
-    private int lastMoveX;
-    private int lastMoveY;
+    private int lastMoveX = -1;
+    private int lastMoveY = -1;
     private boolean samePosition = false;
     // 棋盘大小
     private final int size;
@@ -29,7 +29,7 @@ public class Windows extends JFrame implements MouseListener {
     private int menuLeft = 0;
     private int menuTop = 0;
 
-    private int currentDifficulty = 1;
+    private int currentDifficulty = 3;
     private boolean isDifficultyDropdownOpen = false;
     private final String[] difficulties = {"青铜", "白银", "黄金", "砖石", "王者"};
 
@@ -58,11 +58,17 @@ public class Windows extends JFrame implements MouseListener {
     public void paint(Graphics g) {
         super.paint(g);
         // 横
-        for (int i = 0; i < this.size; i++)
+        for (int i = 0; i < this.size; i++) {
             g.drawLine(xStart, yStart + i * gridSize, xEnd, yStart + i * gridSize);
+            // 左侧行坐标
+            g.drawString(String.valueOf(i), xStart - 20, yStart + i * gridSize + 4);
+        }
         // 竖线
-        for (int i = 0; i < this.size; i++)
+        for (int i = 0; i < this.size; i++) {
             g.drawLine(xStart + i * gridSize, yStart, xStart + i * gridSize, yEnd);
+            // 上方列坐标
+            g.drawString(String.valueOf(i), xStart + i * gridSize - 4, yStart - 10);
+        }
 
         int[][] board = core.getCore();
         for (int i = 0; i < board.length; i++) {

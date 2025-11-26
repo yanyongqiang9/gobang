@@ -1,6 +1,7 @@
 package com;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Robot {
@@ -34,15 +35,17 @@ public class Robot {
         int[][] board = core.getCore();
         List<int[]> legalMoves = getLegalMoves(board);
         // 当前是MAX层
+        int alpha = Integer.MIN_VALUE;
         for (int[] legalMove : legalMoves) {
             int x = legalMove[0], y = legalMove[1];
             board[x][y] = ai;
-            int score = alphaBeta(board, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
+            int score = alphaBeta(board, depth, alpha, Integer.MAX_VALUE, false);
             board[x][y] = EMPTY;
             if (score > bestScore) {
                 bestScore = score;
                 bestMove = legalMove;
             }
+            alpha = Math.max(alpha, score);
         }
         return bestMove;
     }
@@ -188,7 +191,12 @@ public class Robot {
 
         // 限制候选数
         if (res.size() > 15) {
-            return res.subList(0, 15);
+            List<int[]> ints = res.subList(0, 15);
+            for (int[] re : ints) {
+                System.out.print(Arrays.toString(re) + ",");
+            }
+            System.out.println();
+            return ints;
         }
         if (res.isEmpty()) {
             // 下中间
@@ -208,11 +216,11 @@ public class Robot {
 
     private int quickEval(int[][] board, int i, int j) {
         int score = 0;
-
+        int weight = 2;
         // 放 AI 的分
         score += evaluatePoint(board, i, j, ai);
         // 放 Human 的分（防守非常重要）
-        score += evaluatePoint(board, i, j, human) * 2; // 防守权重更大
+        score += evaluatePoint(board, i, j, human) * weight; // 防守权重更大
 
         return score;
     }
